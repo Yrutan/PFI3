@@ -46,6 +46,9 @@
             this.LB_Value_Probabilite = new System.Windows.Forms.Label();
             this.LB_IntervalleConfiance = new System.Windows.Forms.Label();
             this.LB_Value_Marge_Erreur = new System.Windows.Forms.Label();
+            this.LB_Aire = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.LB_Value_Aire = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // RBTN_F1
@@ -124,7 +127,7 @@
             // LB_Probabilite
             // 
             this.LB_Probabilite.AutoSize = true;
-            this.LB_Probabilite.Location = new System.Drawing.Point(12, 167);
+            this.LB_Probabilite.Location = new System.Drawing.Point(12, 191);
             this.LB_Probabilite.Name = "LB_Probabilite";
             this.LB_Probabilite.Size = new System.Drawing.Size(62, 13);
             this.LB_Probabilite.TabIndex = 2;
@@ -133,7 +136,7 @@
             // LB_Estimation_Ponctuelle
             // 
             this.LB_Estimation_Ponctuelle.AutoSize = true;
-            this.LB_Estimation_Ponctuelle.Location = new System.Drawing.Point(12, 144);
+            this.LB_Estimation_Ponctuelle.Location = new System.Drawing.Point(12, 147);
             this.LB_Estimation_Ponctuelle.Name = "LB_Estimation_Ponctuelle";
             this.LB_Estimation_Ponctuelle.Size = new System.Drawing.Size(113, 13);
             this.LB_Estimation_Ponctuelle.TabIndex = 2;
@@ -142,7 +145,7 @@
             // LB_Intervalle
             // 
             this.LB_Intervalle.AutoSize = true;
-            this.LB_Intervalle.Location = new System.Drawing.Point(12, 190);
+            this.LB_Intervalle.Location = new System.Drawing.Point(12, 217);
             this.LB_Intervalle.Name = "LB_Intervalle";
             this.LB_Intervalle.Size = new System.Drawing.Size(121, 13);
             this.LB_Intervalle.TabIndex = 2;
@@ -151,7 +154,7 @@
             // LB_Marge_Erreur
             // 
             this.LB_Marge_Erreur.AutoSize = true;
-            this.LB_Marge_Erreur.Location = new System.Drawing.Point(12, 212);
+            this.LB_Marge_Erreur.Location = new System.Drawing.Point(12, 239);
             this.LB_Marge_Erreur.Name = "LB_Marge_Erreur";
             this.LB_Marge_Erreur.Size = new System.Drawing.Size(81, 13);
             this.LB_Marge_Erreur.TabIndex = 2;
@@ -176,7 +179,7 @@
             // BTN_Executer
             // 
             this.BTN_Executer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Executer.Location = new System.Drawing.Point(15, 255);
+            this.BTN_Executer.Location = new System.Drawing.Point(15, 264);
             this.BTN_Executer.Name = "BTN_Executer";
             this.BTN_Executer.Size = new System.Drawing.Size(78, 29);
             this.BTN_Executer.TabIndex = 8;
@@ -187,7 +190,7 @@
             // LB_Value_Estimation_Ponctuelle
             // 
             this.LB_Value_Estimation_Ponctuelle.AutoSize = true;
-            this.LB_Value_Estimation_Ponctuelle.Location = new System.Drawing.Point(131, 144);
+            this.LB_Value_Estimation_Ponctuelle.Location = new System.Drawing.Point(131, 147);
             this.LB_Value_Estimation_Ponctuelle.Name = "LB_Value_Estimation_Ponctuelle";
             this.LB_Value_Estimation_Ponctuelle.Size = new System.Drawing.Size(0, 13);
             this.LB_Value_Estimation_Ponctuelle.TabIndex = 5;
@@ -195,7 +198,7 @@
             // LB_Value_Probabilite
             // 
             this.LB_Value_Probabilite.AutoSize = true;
-            this.LB_Value_Probabilite.Location = new System.Drawing.Point(131, 167);
+            this.LB_Value_Probabilite.Location = new System.Drawing.Point(131, 191);
             this.LB_Value_Probabilite.Name = "LB_Value_Probabilite";
             this.LB_Value_Probabilite.Size = new System.Drawing.Size(0, 13);
             this.LB_Value_Probabilite.TabIndex = 5;
@@ -203,7 +206,7 @@
             // LB_IntervalleConfiance
             // 
             this.LB_IntervalleConfiance.AutoSize = true;
-            this.LB_IntervalleConfiance.Location = new System.Drawing.Point(131, 190);
+            this.LB_IntervalleConfiance.Location = new System.Drawing.Point(131, 217);
             this.LB_IntervalleConfiance.Name = "LB_IntervalleConfiance";
             this.LB_IntervalleConfiance.Size = new System.Drawing.Size(0, 13);
             this.LB_IntervalleConfiance.TabIndex = 5;
@@ -211,10 +214,35 @@
             // LB_Value_Marge_Erreur
             // 
             this.LB_Value_Marge_Erreur.AutoSize = true;
-            this.LB_Value_Marge_Erreur.Location = new System.Drawing.Point(131, 212);
+            this.LB_Value_Marge_Erreur.Location = new System.Drawing.Point(131, 239);
             this.LB_Value_Marge_Erreur.Name = "LB_Value_Marge_Erreur";
             this.LB_Value_Marge_Erreur.Size = new System.Drawing.Size(0, 13);
             this.LB_Value_Marge_Erreur.TabIndex = 5;
+            // 
+            // LB_Aire
+            // 
+            this.LB_Aire.AutoSize = true;
+            this.LB_Aire.Location = new System.Drawing.Point(12, 169);
+            this.LB_Aire.Name = "LB_Aire";
+            this.LB_Aire.Size = new System.Drawing.Size(67, 13);
+            this.LB_Aire.TabIndex = 2;
+            this.LB_Aire.Text = "Aire estimé : ";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(133, 169);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(0, 13);
+            this.label5.TabIndex = 5;
+            // 
+            // LB_Value_Aire
+            // 
+            this.LB_Value_Aire.AutoSize = true;
+            this.LB_Value_Aire.Location = new System.Drawing.Point(133, 169);
+            this.LB_Value_Aire.Name = "LB_Value_Aire";
+            this.LB_Value_Aire.Size = new System.Drawing.Size(0, 13);
+            this.LB_Value_Aire.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -223,6 +251,8 @@
             this.ClientSize = new System.Drawing.Size(385, 328);
             this.Controls.Add(this.LB_Value_Marge_Erreur);
             this.Controls.Add(this.LB_IntervalleConfiance);
+            this.Controls.Add(this.LB_Value_Aire);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.LB_Value_Probabilite);
             this.Controls.Add(this.LB_Value_Estimation_Ponctuelle);
             this.Controls.Add(this.BTN_Executer);
@@ -230,6 +260,7 @@
             this.Controls.Add(this.CBX_BorneA);
             this.Controls.Add(this.LB_Estimation_Ponctuelle);
             this.Controls.Add(this.LB_Marge_Erreur);
+            this.Controls.Add(this.LB_Aire);
             this.Controls.Add(this.LB_Intervalle);
             this.Controls.Add(this.LB_Probabilite);
             this.Controls.Add(this.LB_Borne_b);
@@ -267,6 +298,9 @@
         private System.Windows.Forms.Label LB_Value_Probabilite;
         private System.Windows.Forms.Label LB_IntervalleConfiance;
         private System.Windows.Forms.Label LB_Value_Marge_Erreur;
+        private System.Windows.Forms.Label LB_Aire;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label LB_Value_Aire;
     }
 }
 

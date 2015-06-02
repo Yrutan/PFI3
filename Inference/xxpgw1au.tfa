@@ -248,25 +248,28 @@ namespace Inference
         private float CalculerAireProbable()
         {
             float aire = -1;
-            float aireRectangle = CalculerAireRectangle();
+            float aire = CalculerAireRectangle();
             switch (fonction)
             {
                 case 0: 
-                    aire = (aireRectangle/ 24.9026F) * 100F;
+                    aire = (aire/ 24.9026F) * 100F;
                     break;
                 case 1: 
-                    aire = (aireRectangle / 36.2815F) * 100F;
+                    aire = (aire / 36.2815F) * 100F;
                     break;
                 case 2: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                    aire = (aire / 94.1111F) * 100F;
                     break;
                 case 3: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                    aire = (aire / 94.1111F) * 100F;
                     break;
                 case 4: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                    aire = (aire / 94.1111F) * 100F;
                     break;
             }
+
+
+
             return aire;
         }
 
@@ -284,10 +287,7 @@ namespace Inference
             GenererPointsEstimationPoncutelle();
 
             LB_Value_Estimation_Ponctuelle.Text = CalculerEstimationPonctuel().ToString();
-            LB_Value_Aire.Text = CalculerAireProbable().ToString();
-
-
-            LB_Value_Probabilite.Text = "";
+            LB_Value_Probabilite.Text = CalculerAireProbable().ToString();
 
 
             LB_Value_Marge_Erreur.Text = CalculerMargeErreur().ToString();
