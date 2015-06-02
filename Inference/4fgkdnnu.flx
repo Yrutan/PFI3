@@ -36,7 +36,7 @@ namespace Inference
 
         public const int NOMBRE_POINTS_ALEATOIRE = 10000;
 
-        private int nombre_Points_valides = 0;
+        private int nombre_Points_valide = 0;
 
         private List<RadioButton> listeFonction = new List<RadioButton>();
 
@@ -69,9 +69,6 @@ namespace Inference
                 CBX_BorneA.Items.Add(i);
                 CBX_BorneB.Items.Add(i);
             }
-            CBX_BorneA.SelectedIndex = 0;
-            CBX_BorneB.SelectedIndex = CBX_BorneB.Items.Count-1;
-
         }
 
         private bool Fonction1(Position p)
@@ -135,18 +132,22 @@ namespace Inference
         }
         public float GetMaxY()
         {
-            float y = -1;
+            float y;
             switch (fonction)
             {
                 case 0: y = VALEUR_MAX_Y_F1;
+                    Fonction1(point);
                     break;
-                case 1: y = VALEUR_MAX_Y_F2;
+                case 1: point.Y = GenererFloatY(VALEUR_MAX_Y_F2);
+                    pointValide = Fonction2(point);
                     break;
-                case 2: y = VALEUR_MAX_Y_F3;
+                case 2: point.Y = GenererFloatY(VALEUR_MAX_Y_F3);
+                    pointValide = Fonction3(point);
                     break;
-                case 3: y = VALEUR_MAX_Y_F4;
+                case 3: point.Y = GenererFloatY(VALEUR_MAX_Y_F4);
+                    pointValide = Fonction4(point);
                     break;
-                case 4: y = VALEUR_MAX_Y_F5;
+                case 4: point.Y = GenererFloatY(VALEUR_MAX_Y_F5);
                     break;
             }
             return y;
@@ -156,7 +157,7 @@ namespace Inference
         private float CalculerEstimateurPonctuel()
         {
             // réinitialise à zéro pour le nouveau calcul
-            nombre_Points_valides = 0;
+            nombre_Points_valide = 0;
 
             Position point;
             bool pointValide = false;
@@ -189,26 +190,22 @@ namespace Inference
                 }
                 if (pointValide)
                 {
-                    nombre_Points_valides++;
+                    nombre_Points_valide++;
                 }
                 else
                 {
                     // ne rien faire
                 }
             }
-
-            float estimationPonctuelle = CalculerAire() * (nombre_Points_valides / NOMBRE_POINTS_ALEATOIRE);
-
-            return estimationPonctuelle;
+            return ((float)nombre_Points_valide / (float)NOMBRE_POINTS_ALEATOIRE)*100;
         }
 
 
         private float CalculerAire()
         {
             float hauteur = GetMaxY();
-            float largeur = float.Parse(CBX_BorneB.Text) - float.Parse(CBX_BorneA.Text);
-            float aire = hauteur * largeur;
-            return aire;
+            float largeur = float.Parse(CBX_BorneB.SelectedText) - float.Parse(CBX_BorneA.SelectedText);
+
         }
 
         private float CalculerMargeErreur()
@@ -230,28 +227,6 @@ namespace Inference
             return me;
         }
 
-        private float CalculerProbabilite()
-        {
-            float probabilite = -1;
-            float aire = CalculerAire();
-            switch (fonction)
-            {
-                case 0: probabilite = (aire/ 24.9026F) * 100F;
-                    break;
-                case 1: probabilite = (aire / 36.2815F) * 100F;
-                    break;
-                case 2: probabilite = (aire / 94.1111F) * 100F;
-                    break;
-                case 3: probabilite = (aire / 94.1111F) * 100F;
-                    break;
-                case 4: probabilite = (aire / 94.1111F) * 100F;
-                    break;
-            }
-
-            return probabilite;
-        }
-
-
         private void BTN_Executer_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < listeFonction.Count; i++)
@@ -263,19 +238,11 @@ namespace Inference
                 }
             }
             LB_Value_Estimation_Ponctuelle.Text = CalculerEstimateurPonctuel().ToString();
-            LB_Value_Probabilite.Text = CalculerProbabilite().ToString();
-
 
             LB_Value_Marge_Erreur.Text = CalculerMargeErreur().ToString();
 
 
-            if(LB_Value_Probabilite.Text.Length > PRECISION_DECIMALES)
-            {
-                LB_Value_Probabilite.Text = LB_Value_Probabilite.Text.Substring(0,PRECISION_DECIMALES+2);
-            }
-
             LB_Value_Estimation_Ponctuelle.Text += "%";
-            LB_Value_Probabilite.Text += "%";
         }
 
 
