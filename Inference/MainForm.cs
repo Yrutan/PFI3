@@ -46,7 +46,7 @@ namespace Inference
         // la cote z pour un niveau de confiance de 95%
         private const float COTE_Z = 1.96F;
 
-
+        private float estimationPonctuelle = 0;
         private int fonction = 0;
 
         public MainForm()
@@ -65,14 +65,9 @@ namespace Inference
             listeFonction.Add(RBTN_F4);
             listeFonction.Add(RBTN_F5);
 
-            // <= pour inclure la borne max
-            for (int i = VALEUR_MIN_BORNE; i <= VALEUR_MAX_BORNE; i++)
-            {
-                CBX_BorneA.Items.Add(i);
-                CBX_BorneB.Items.Add(i);
-            }
-            CBX_BorneA.SelectedIndex = 0;
-            CBX_BorneB.SelectedIndex = CBX_BorneB.Items.Count-1;
+            TBX_BorneA.Text = "0";
+            TBX_BorneB.Text = "11";
+
 
         }
 
@@ -86,6 +81,7 @@ namespace Inference
             value = value - (16 * p.X) + 63;
             value = (float)(-Math.Pow(value, (1.0F/ 3.0F))) + 4F;
             return p.Y <= value;
+
         }
         private bool Fonction2(Position p)
         {
@@ -104,8 +100,8 @@ namespace Inference
         private bool Fonction3(Position p)
         {
             float value = -(1.0f / 3.0f);
-            value = value * float.Parse(Math.Pow((p.X - 6), 2).ToString());
-            value += 12;
+            value = value * float.Parse(Math.Pow((p.X - 6.0F), 2).ToString());
+            value = value + 12.0F;
             return float.Parse(p.Y.ToString()) <= value;
         }
 
@@ -121,14 +117,16 @@ namespace Inference
             return p.Y <= value;
         }
 
-        public float GenererFloatX()
+        public float GenererFloatX(float a , float b)
         {
             // obtient un nombre entre 0 et 1
             double randomNumber = random.NextDouble();
             // le multiplie pour obtenir un nombre entre l'interval voulu
-            randomNumber = randomNumber * (VALEUR_MAX_BORNE - VALEUR_MIN_BORNE);
+            // Math.Abs retourne la valeur absolue de (a - b)
+            randomNumber = randomNumber * Math.Abs(a - b);
             // ajoute la valeur minimum afin d'obtenir un nombre entre les valeurs voulues
-            randomNumber = randomNumber + VALEUR_MIN_BORNE;
+            // Math.Min retourne le plus petit des deux nombres
+            randomNumber = randomNumber + Math.Min(a,b);
             // arrondit pour qu'il ne reste plus que 2 décimales
             randomNumber = Math.Round(randomNumber, 2);
 
@@ -141,7 +139,7 @@ namespace Inference
             // le multiplie pour obtenir un nombre entre l'interval voulu
             randomNumber = randomNumber * (GetMaxY() - VALEUR_MIN_Y);
             // ajoute la valeur minimum afin d'obtenir un nombre entre les valeurs voulues
-            randomNumber = randomNumber + VALEUR_MIN_BORNE;
+            randomNumber = randomNumber + VALEUR_MIN_Y;
             // arrondit pour qu'il ne reste plus que 2 décimales
             randomNumber = Math.Round(randomNumber, 2);
 
@@ -173,9 +171,12 @@ namespace Inference
             Position point;
             bool pointValide = false;
 
+            float borneA = float.Parse(TBX_BorneA.Text);
+            float borneB = float.Parse(TBX_BorneB.Text);
+
             for (int i = 0; i < NOMBRE_POINTS_ALEATOIRE; i++)
             {
-                point.X = GenererFloatX();
+                point.X = GenererFloatX(borneA, borneB);
 
                 switch (fonction)
                 {
@@ -210,66 +211,70 @@ namespace Inference
             }
         }
 
-        private float CalculerEstimationPonctuel()
+        private void CalculerEstimationPonctuel()
         {
-            float estimationPonctuelle = CalculerAireRectangle() * ((float)nombre_Points_valides / (float)NOMBRE_POINTS_ALEATOIRE);
-
-            return estimationPonctuelle;
+            GenererPointsEstimationPoncutelle();
+            estimationPonctuelle = CalculerAireRectangle() * 
+                ((float)nombre_Points_valides / (float)NOMBRE_POINTS_ALEATOIRE);
         }
 
 
         private float CalculerAireRectangle()
         {
             float hauteur = GetMaxY();
-            float largeur = float.Parse(CBX_BorneB.Text) - float.Parse(CBX_BorneA.Text);
+            float largeur = float.Parse(TBX_BorneA.Text) - float.Parse(TBX_BorneB.Text);
+            if(largeur < 0)
+            {
+                largeur = -largeur;
+            }
+
             float aire = hauteur * largeur;
             return aire;
         }
 
         private float CalculerMargeErreur()
         {
-            float estimationPonctuelle = float.Parse(LB_Value_Estimation_Ponctuelle.Text);
-            float me;
+            float margeErreur;
 
-            // estimationPonctuelle
-            me = estimationPonctuelle/100F;
-            // estimationPonctuelle * (1 - estimationPonctuelle)
-            me = me *(1.0F - estimationPonctuelle/100F);
-            // tout ça diviser par le total (la taille de l'échantillon)
-            me = me / NOMBRE_POINTS_ALEATOIRE;
+            // ( estimationPonctuelle * (1 - estimationPonctuelle) / NOMBRE_POINTS_ALEATOIRE )^(1/2)  * COTE_Z
+            margeErreur = estimationPonctuelle/100F;
+            margeErreur = margeErreur *(1.0F - estimationPonctuelle/100F);
+            margeErreur = margeErreur / NOMBRE_POINTS_ALEATOIRE;
             // la racine carré du résultat
-            me = (float)Math.Sqrt(double.Parse(me.ToString()));
-            // multiplié par la cote Z
-            me = me * COTE_Z;
-            me = (float)(Math.Round(me, PRECISION_DECIMALES));
-            return me;
+            margeErreur = (float)Math.Sqrt(double.Parse(margeErreur.ToString()));
+            margeErreur = margeErreur * COTE_Z;
+            margeErreur = margeErreur * 100F;
+            // arrondir à 4 décimales
+            margeErreur = (float)(Math.Round(margeErreur, PRECISION_DECIMALES));
+            return margeErreur;
         }
 
-        private float CalculerAireProbable()
+        private float CalculerProbabilite()
         {
-            float aire = -1;
-            float aireRectangle = CalculerAireRectangle();
+            double probabilite = 0;
+            float margeErreur = CalculerMargeErreur();
             switch (fonction)
             {
-                case 0: 
-                    aire = (aireRectangle/ 24.9026F) * 100F;
+                case 0:
+                    probabilite = Math.Round((estimationPonctuelle / 24.9026F) * 100F, PRECISION_DECIMALES);
                     break;
-                case 1: 
-                    aire = (aireRectangle / 36.2815F) * 100F;
+                case 1:
+                    probabilite = Math.Round((estimationPonctuelle / 36.2815F) * 100F, PRECISION_DECIMALES);
                     break;
-                case 2: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                case 2:
+                    probabilite = Math.Round((estimationPonctuelle / CalculerAireRectangle()) * 100F, PRECISION_DECIMALES);
                     break;
-                case 3: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                case 3:
+                    probabilite = Math.Round((estimationPonctuelle / 61.4956F) * 100F, PRECISION_DECIMALES);
                     break;
-                case 4: 
-                    aire = (aireRectangle / 94.1111F) * 100F;
+                case 4:
+                    probabilite = Math.Round((estimationPonctuelle / 32.0F) * 100F, PRECISION_DECIMALES);
                     break;
             }
-            return aire;
-        }
 
+
+            return (float)probabilite;
+        }
 
         private void BTN_Executer_Click(object sender, EventArgs e)
         {
@@ -281,20 +286,31 @@ namespace Inference
                     break;
                 }
             }
-            GenererPointsEstimationPoncutelle();
+            CalculerEstimationPonctuel();
 
-            LB_Value_Estimation_Ponctuelle.Text = CalculerEstimationPonctuel().ToString();
-            LB_Value_Aire.Text = CalculerAireProbable().ToString();
+            LB_Value_Estimation_Ponctuelle.Text = estimationPonctuelle.ToString();
+            
+            LB_Value_Probabilite.Text = CalculerProbabilite().ToString() + "%";
 
+            LB_Value_Probabilite.Text = CalculerProbabilite().ToString() + "%";
 
-            LB_Value_Probabilite.Text = "";
+            LB_Value_Marge_Erreur.Text = CalculerMargeErreur().ToString() + "%";
 
+            LB_Value_IntervalleConfiance.Text = (CalculerProbabilite() - CalculerMargeErreur()).ToString() + "%" 
+                + " à " + (CalculerProbabilite() + CalculerMargeErreur()).ToString() + "%"; 
+            
+        }
 
-            LB_Value_Marge_Erreur.Text = CalculerMargeErreur().ToString();
-
-            LB_Value_Estimation_Ponctuelle.Text += "%";
-            LB_Value_Probabilite.Text += "%";
-            LB_Value_Marge_Erreur.Text +=  "%";
+        private void TBX_TextChanged(object sender, EventArgs e)
+        {
+            if(TBX_BorneA.Text.Length > 0 && TBX_BorneB.Text.Length > 0)
+            {
+                BTN_Executer.Enabled = true;
+            }
+            else
+            {
+                BTN_Executer.Enabled = false;
+            }
         }
 
     }
